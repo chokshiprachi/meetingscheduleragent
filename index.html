@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MeetEase Pro AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+    font-family: Arial;
+    margin:0;
+    background:#f4f6fb;
+}
+header{
+    background:#4e73df;
+    color:white;
+    padding:60px;
+    text-align:center;
+}
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    background:#4e73df;
+    color:white;
+}
+.section{
+    padding:40px;
+    text-align:center;
+}
+.features{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+}
+.card{
+    background:white;
+    padding:20px;
+    width:220px;
+    border-radius:8px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+.scheduler,.dashboard{
+    display:none;
+    background:white;
+    max-width:650px;
+    margin:30px auto;
+    padding:20px;
+    border-radius:10px;
+}
+input{
+    width:100%;
+    padding:8px;
+    margin:8px 0;
+}
+.slot{
+    display:inline-block;
+    padding:8px 12px;
+    background:#ddd;
+    margin:5px;
+    border-radius:5px;
+    cursor:pointer;
+}
+.slot.selected{
+    background:#4e73df;
+    color:white;
+}
+.booking-item{
+    background:#eee;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
+}
+.ai-box{
+    background:#eef2ff;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>MeetEase Pro AI</h1>
+<p>Smart AI Meeting Scheduler</p>
+<button onclick="openScheduler()">Book Meeting</button>
+</header>
+
+<div class="section">
+<h2>Features</h2>
+<div class="features">
+<div class="card">AI Natural Language Booking</div>
+<div class="card">Auto Scheduling</div>
+<div class="card">Payment Simulation</div>
+<div class="card">Reminder System</div>
+<div class="card">Premium Dashboard</div>
+</div>
+</div>
+
+<div class="scheduler" id="scheduler">
+<h2>Schedule Meeting</h2>
+
+<input type="text" id="name" placeholder="Your Name">
+<input type="email" id="email" placeholder="Your Email">
+<input type="date" id="date">
+
+<h3>Select Time</h3>
+<div id="slots"></div>
+
+<div class="ai-box">
+<h3>AI Assistant</h3>
+<input type="text" id="aiInput" placeholder="Example: Book tomorrow at 10am">
+<button onclick="processAI()">Ask AI</button>
+<p id="aiResponse"></p>
+</div>
+
+<h3>Payment ($10 Demo)</h3>
+<button onclick="payNow()">Pay Now</button>
+
+<br><br>
+<button onclick="confirmBooking()">Confirm Booking</button>
+<button onclick="openDashboard()">View Dashboard</button>
+
+<p id="message"></p>
+</div>
+
+<div class="dashboard" id="dashboard">
+<h2>Your Meetings</h2>
+<div id="bookingList"></div>
+<button onclick="goBack()">Back</button>
+</div>
+
+<script>
+
+let selectedTime=null;
+let paymentDone=false;
+
+const times=["09:00","10:00","11:00","14:00","15:00"];
+
+function openScheduler(){
+    document.getElementById("scheduler").style.display="block";
+    generateSlots();
+}
+
+function generateSlots(){
+    const container=document.getElementById("slots");
+    container.innerHTML="";
+    times.forEach(time=>{
+        const div=document.createElement("div");
+        div.className="slot";
+        div.innerText=time;
+        div.onclick=function(){
+            document.querySelectorAll(".slot").forEach(s=>s.classList.remove("selected"));
+            div.classList.add("selected");
+            selectedTime=time;
+        }
+        container.appendChild(div);
+    });
+}
+
+function payNow(){
+    alert("Payment Successful ✅ (Demo Stripe)");
+    paymentDone=true;
+}
+
+function processAI(){
+
+    const text=document.getElementById("aiInput").value.toLowerCase();
+    const response=document.getElementById("aiResponse");
+    const dateField=document.getElementById("date");
+    let today=new Date();
+
+    let detectedDate="";
+    let detectedTime="";
+
+    // Detect tomorrow
+    if(text.includes("tomorrow")){
+        let tomorrow=new Date();
+        tomorrow.setDate(today.getDate()+1);
+        dateField.value=tomorrow.toISOString().split("T")[0];
+        detectedDate=dateField.value;
+    }
+
+    // Detect time number
+    let number=text.match(/\d{1,2}/);
+    if(number){
+        let hour=parseInt(number[0]);
+
+        if(text.includes("pm") && hour<12){
+            hour+=12;
+        }
+
+        if(hour<10){
+            hour="0"+hour;
+        }
+
+        selectedTime=hour+":00";
+        detectedTime=selectedTime;
+    }
+
+    generateSlots();
+
+    // Dynamic AI response
+    if(detectedDate && detectedTime){
+        response.innerHTML=
+        "🤖 Meeting planned on <b>"+detectedDate+
+        "</b> at <b>"+detectedTime+
+        "</b>. Please confirm.";
+    }
+    else if(detectedDate){
+        response.innerHTML=
+        "🤖 Date selected as <b>"+detectedDate+
+        "</b>. Please select time.";
+    }
+    else if(detectedTime){
+        response.innerHTML=
+        "🤖 Time selected as <b>"+detectedTime+
+        "</b>. Please select date.";
+    }
+    else{
+        response.innerHTML=
+        "🤖 Sorry, I did not understand. Try: 'Book tomorrow at 10am'";
+    }
+}
+
+function confirmBooking(){
+
+    const name=document.getElementById("name").value;
+    const email=document.getElementById("email").value;
+    const date=document.getElementById("date").value;
+
+    if(!name || !email || !date){
+        alert("Please fill all details");
+        return;
+    }
+
+    if(!selectedTime){
+        selectedTime=times[0];
+        alert("AI selected next available time: "+selectedTime);
+    }
+
+    if(!paymentDone){
+        alert("Please complete payment first");
+        return;
+    }
+
+    const booking={
+        name:name,
+        email:email,
+        date:date,
+        time:selectedTime
+    };
+
+    let bookings=JSON.parse(localStorage.getItem("bookings"))||[];
+    bookings.push(booking);
+    localStorage.setItem("bookings",JSON.stringify(bookings));
+
+    document.getElementById("message").innerHTML=
+    "✅ Meeting Scheduled on "+date+" at "+selectedTime+
+    "<br>Calendar Event Created (Demo)";
+
+    setTimeout(function(){
+        alert("🔔 Reminder: You have a meeting!");
+    },5000);
+
+    paymentDone=false;
+}
+
+function openDashboard(){
+    document.getElementById("scheduler").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+
+    const bookings=JSON.parse(localStorage.getItem("bookings"))||[];
+    const list=document.getElementById("bookingList");
+    list.innerHTML="";
+
+    bookings.forEach(b=>{
+        const div=document.createElement("div");
+        div.className="booking-item";
+        div.innerHTML="<b>"+b.name+"</b><br>"+
+        b.date+" at "+b.time+"<br>"+b.email;
+        list.appendChild(div);
+    });
+}
+
+function goBack(){
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("scheduler").style.display="block";
+}
+
+</script>
+
+</body>
+</html>

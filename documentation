@@ -1,0 +1,154 @@
+# MeetEase Pro AI - Project Documentation
+
+------------------------------------------------------------
+
+1. Introduction
+
+MeetEase Pro AI is a frontend-based smart meeting scheduling web application.
+
+The system allows users to:
+- Schedule meetings
+- Use natural language like "Book tomorrow at 10am"
+- Simulate payment
+- View meetings in a dashboard
+
+
+------------------------------------------------------------
+
+2. Objective
+
+The main objective of this project is:
+
+- To build a smart meeting scheduler
+- To simulate AI behavior without backend
+- To practice JavaScript logic building
+- To create a clean and user-friendly interface
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+
+3. System Architecture
+
+User Input
+   ↓
+AI Text Processing (JavaScript Logic)
+   ↓
+Date & Time Detection
+   ↓
+Booking Confirmation
+   ↓
+LocalStorage Save
+   ↓
+Dashboard Display
+
+------------------------------------------------------------
+4. Modules Description
+
+5.1 Landing Page
+Displays introduction and feature overview.
+
+5.2 Meeting Scheduler
+Collects:
+- Name
+- Email
+- Date
+- Time
+
+4.3 AI Assistant Module
+- Detects keywords like "tomorrow"
+- Extracts time using pattern matching
+- Automatically fills date and time
+- Shows dynamic confirmation message
+
+4.4 Payment Simulation
+- Simulates payment confirmation
+- Allows booking only after payment
+
+4.5 Reminder System
+- Uses setTimeout()
+- Shows reminder popup before meeting
+
+4.6 Dashboard
+- Displays all scheduled meetings
+- Data stored using LocalStorage
+
+------------------------------------------------------------
+
+5. Technologies Used
+
+- HTML5 (Structure)
+- CSS3 (Styling)
+- JavaScript (Logic)
+- LocalStorage API (Data Storage)
+
+------------------------------------------------------------
+
+6. How AI Simulation Works
+
+This project does not use real Artificial Intelligence.
+
+It uses:
+
+1. Keyword Detection
+   Example:
+   If input includes "tomorrow"
+
+2. Regular Expressions
+   Used to extract numbers for time.
+
+3. Conditional Statements
+   Used to decide date and time.
+
+------------------------------------------------------------
+
+7. Data Storage
+
+Meetings are stored using LocalStorage.
+
+This means:
+- Data is saved in the browser
+- Data remains until manually cleared
+- No database is used
+
+------------------------------------------------------------
+
+8. Limitations
+
+- No real AI model
+- No backend server
+- No multi-user system
+- No authentication
+- No real payment gateway
+- Works only in browser
+
+------------------------------------------------------------
+
+9. Future Enhancements
+
+- Add OpenAI API for real AI
+- Add Google Calendar integration
+- Add Stripe payment gateway
+- Add login/signup system
+- Add backend with database
+- Add voice command support
+- Add admin panel
+
+------------------------------------------------------------
+
+10. Conclusion
+
+MeetEase Pro AI successfully demonstrates how AI-like behavior can be simulated using JavaScript logic.
+
+The project helps in understanding:
+- DOM manipulation
+- Event handling
+- Pattern matching
+- UI design
+- Frontend architecture
+
+It is a good learning project for beginners in web development.
+
+------------------------------------------------------------
+
+End of Documentation
